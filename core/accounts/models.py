@@ -1,6 +1,9 @@
 from django.db import models
-from django.contrib.auth import (BaseUserManager, AbstractBaseUser, PermissionMixin)
+from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
+from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import ungettext_lazy as _
+from django.db import models
+
 # Create your models here.
 
 
@@ -9,7 +12,7 @@ class UserManager(BaseUserManager):
     custom user model manager where email is the unique identifiers for authentication instead usernames.
     """
 
-    def created_user(self,email,password,**extra_fields):
+    def create_user(self,email,password,**extra_fields):
         """
         created and save a User with the given email and password
         """
@@ -38,7 +41,7 @@ class UserManager(BaseUserManager):
 
 
 
-class User(AbstractBaseUser,PermissionMixin):
+class User(AbstractBaseUser,PermissionsMixin):
     """
     custom User Model for our app
     """
@@ -47,11 +50,13 @@ class User(AbstractBaseUser,PermissionMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     #is_verified = models.BooleanField(default=False)
-    first_name = models.CharField(max_length=20)
+    
+    USERNAME_FIELD = 'email'
+
     REQUIRED_FIELDS = []
 
     created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DurationField(auto_now=True)
+    updated_date = models.DateTimeField(auto_now=True)
 
     objects = UserManager()
 
