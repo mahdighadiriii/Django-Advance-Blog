@@ -5,6 +5,7 @@ from .models import User
 
 
 class CustomUserAdmin(UserAdmin):
+    """Define admin model for custom User model ."""
     model = User
     list_display = ('email', 'is_superuser', 'is_active')
     list_filter = ('email', 'is_superuser', 'is_active')
@@ -21,6 +22,18 @@ class CustomUserAdmin(UserAdmin):
             "permissions",
             {
                 "fields": ["is_staff", "is_active", "is_superuser"],
+            },
+        ),
+        (
+            "group permissions",
+            {
+                "fields": ["groups", "user_permissions"],
+            },
+        ),
+        (
+            "important date",
+            {
+                "fields": ["last_login"],
             },
         ),
     ]
