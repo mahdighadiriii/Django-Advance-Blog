@@ -3,7 +3,8 @@ from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import ungettext_lazy as _
 from django.db import models
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Create your models here.
 
 
@@ -73,4 +74,9 @@ class Profile(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        self.user.email
+        return self.user.email
+    
+@receiver(post_save,sender=User)
+def save_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
