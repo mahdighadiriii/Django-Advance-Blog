@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
+from django.views.generic import FormView
 from .models import Post
+from .forms import PostForm
 # Create your views here.
 
 
@@ -24,3 +26,11 @@ class IndexView(TemplateView):
         return context
 
 
+class PostCreateView(FormView):
+    template_name = 'contact.html'
+    form_class = PostForm
+    success_url = '/blog/post/'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
