@@ -19,6 +19,8 @@ urlpatterns = [
     # token login
     path('token/login/', views.CustomObtainAuthToken.as_view(), name='token-login'),
     path('token/logout/', views.CustomDicardAuthtoken.as_view(), name='token-logout'),
+    # profile
+    path('profile/',views.ProfileApiView.as_view(), name='profile'),
     # jwt login
     path('jwt/create/',views.CustomTokenObtainPairView.as_view(), name='jwt-create'),
     path('jwt/refresh/',TokenRefreshView.as_view(), name='jwt-refresh'),
