@@ -14,6 +14,8 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     # registration
     path('registration/', views.RegistrationApiView.as_view(), name='registration'),
+    #email 
+    path('test-email', views.TestEmailSend.as_view(), name='test-email'),
     # change password
     path('change-password/',views.ChangePasswordApiView.as_view(), name='change-password'),
     # token login

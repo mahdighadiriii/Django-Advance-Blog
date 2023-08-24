@@ -12,3 +12,6 @@ drf-yasg[validation]
 
 
 # deployment modules
+
+# email send third party modules
+django-mail-templated
