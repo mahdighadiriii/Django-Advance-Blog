@@ -95,5 +95,8 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
 class TestEmailSend(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
+
         send_mail('email/hello.tpl', {'name': 'mahdi'}, 'admin@admin.com', ['mahdighadiriafzal@gmail.com'])
+        
+        
         return Response('email sent')
