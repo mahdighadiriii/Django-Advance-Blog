@@ -11,6 +11,7 @@ from rest_framework_simplejwt.views import (
 
 
 
+
 urlpatterns = [
     # registration
     path('registration/', views.RegistrationApiView.as_view(), name='registration'),
