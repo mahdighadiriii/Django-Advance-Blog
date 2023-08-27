@@ -2,27 +2,37 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
 from .models import Profile
+
 # Register your models here.
 
 
 class CustomUserAdmin(UserAdmin):
     """Define admin model for custom User model ."""
+
     model = User
-    list_display = ('email', 'is_superuser', 'is_active', 'is_verified')
-    list_filter = ('email', 'is_superuser', 'is_active', 'is_verified')
-    searching_fields = ('email',)
-    ordering = ('email',)
+    list_display = ("email", "is_superuser", "is_active", "is_verified")
+    list_filter = ("email", "is_superuser", "is_active", "is_verified")
+    searching_fields = ("email",)
+    ordering = ("email",)
     fieldsets = [
         (
-            'Authentication',
+            "Authentication",
             {
-                "fields": ["email", "password",],
+                "fields": [
+                    "email",
+                    "password",
+                ],
             },
         ),
         (
             "permissions",
             {
-                "fields": ["is_staff", "is_active", "is_superuser", "is_verified"],
+                "fields": [
+                    "is_staff",
+                    "is_active",
+                    "is_superuser",
+                    "is_verified",
+                ],
             },
         ),
         (
@@ -39,9 +49,21 @@ class CustomUserAdmin(UserAdmin):
         ),
     ]
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active','is_superuser', 'is_verified')}))
-    
+        None,
+        {
+            "classes": ("wide",),
+            "fields": (
+                "email",
+                "password1",
+                "password2",
+                "is_staff",
+                "is_active",
+                "is_superuser",
+                "is_verified",
+            ),
+        },
+    )
+
+
 admin.site.register(Profile)
 admin.site.register(User, CustomUserAdmin)

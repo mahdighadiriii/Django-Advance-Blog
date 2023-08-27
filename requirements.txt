@@ -15,3 +15,8 @@ drf-yasg[validation]
 
 # email send third party modules
 django-mail-templated
+
+
+#reformating tests
+black
+flake8
