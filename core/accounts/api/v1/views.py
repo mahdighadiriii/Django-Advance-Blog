@@ -68,7 +68,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
         )
 
 
-class CustomDicardAuthtoken(APIView):
+class CustomDiscardAuthtoken(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):

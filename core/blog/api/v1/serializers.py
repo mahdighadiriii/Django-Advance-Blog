@@ -3,6 +3,7 @@ from ...models import Post, Category
 from accounts.models import Profile
 
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

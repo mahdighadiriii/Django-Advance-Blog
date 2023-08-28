@@ -44,7 +44,7 @@ urlpatterns = [
     ),
     path(
         "token/logout/",
-        views.CustomDicardAuthtoken.as_view(),
+        views.CustomDiscardAuthtoken.as_view(),
         name="token-logout",
     ),
     # jwt login
