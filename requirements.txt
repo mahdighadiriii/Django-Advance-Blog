@@ -20,3 +20,5 @@ django-mail-templated
 #reformating tests
 black
 flake8
+pytest
+pytest-django
