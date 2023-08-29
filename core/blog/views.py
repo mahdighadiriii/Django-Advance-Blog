@@ -16,6 +16,8 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
+
+
 # Create your views here.
 class IndexView(TemplateView):
     """
@@ -37,9 +39,6 @@ def redirectToMaktab(request):
     return redirect('https://maktabkhooneh.com')
 
 """
-
-
-
 
 
 class PostListView(ListView):

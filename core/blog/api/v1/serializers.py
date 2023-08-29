@@ -3,7 +3,6 @@ from ...models import Post, Category
 from accounts.models import Profile
 
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -12,12 +11,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     snippet = serializers.ReadOnlyField(source="get_snippet")
-    relative_url = serializers.URLField(
-        source="get_absolute_api_url", read_only=True
-    )
-    absolute_url = serializers.SerializerMethodField(
-        method_name="get_abs_url"
-    )
+    relative_url = serializers.URLField(source="get_absolute_api_url", read_only=True)
+    absolute_url = serializers.SerializerMethodField(method_name="get_abs_url")
 
     class Meta:
         model = Post
