@@ -1,28 +1,28 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
 from .serializers import (
     RegistrationSerializer,
     CustomAuthTokenSerializer,
-    CustomObtainTokenPairSerializer,
-    ChangePasswordApiView,
+    CustomTokenObtainPairSerializer,
+    ChangePasswordSerialier,
     ProfileSerializer,
     ActivationResendSerializer,
 )
-from rest_framework.views import APIView
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
 from ...models import Profile
 from django.shortcuts import get_object_or_404
 from ..utils import EmailThread
+from mail_templated import EmailMessage
 from rest_framework_simplejwt.tokens import RefreshToken
 import jwt
 from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
 from django.conf import settings
-
 
 User = get_user_model()
 
@@ -60,13 +60,15 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer = self.serializer_class(
             data=request.data, context={"request": request}
         )
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key, "user_id": user.pk, "email": user.email})
+        return Response(
+            {"token": token.key, "user_id": user.pk, "email": user.email}
+        )
 
 
-class CustomDiscardAuthtoken(APIView):
+class CustomDiscardAuthToken(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -75,13 +77,13 @@ class CustomDiscardAuthtoken(APIView):
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomObtainTokenPairSerializer
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 class ChangePasswordApiView(generics.GenericAPIView):
     model = User
     permission_classes = [IsAuthenticated]
-    serializer_class = ChangePasswordApiView
+    serializer_class = ChangePasswordSerialier
 
     def get_object(self, queryset=None):
         obj = self.request.user
@@ -91,10 +93,12 @@ class ChangePasswordApiView(generics.GenericAPIView):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            # check old password
-            if not self.object.check_password(serializer.data.get("old_password")):
+            # Check old password
+            if not self.object.check_password(
+                serializer.data.get("old_password")
+            ):
                 return Response(
-                    {"old_password": ["wrong password."]},
+                    {"old_password": ["Wrong password."]},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             # set_password also hashes the password that the user will get
@@ -110,6 +114,7 @@ class ChangePasswordApiView(generics.GenericAPIView):
 class ProfileApiView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         queryset = self.get_queryset()
@@ -129,7 +134,6 @@ class TestEmailSend(generics.GenericAPIView):
             to=[self.email],
         )
         EmailThread(email_obj).start()
-
         return Response("email sent")
 
     def get_tokens_for_user(self, user):
@@ -140,7 +144,9 @@ class TestEmailSend(generics.GenericAPIView):
 class ActivationApiView(APIView):
     def get(self, request, token, *args, **kwargs):
         try:
-            token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            token = jwt.decode(
+                token, settings.SECRET_KEY, algorithms=["HS256"]
+            )
             user_id = token.get("user_id")
         except ExpiredSignatureError:
             return Response(
@@ -153,12 +159,17 @@ class ActivationApiView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         user_obj = User.objects.get(pk=user_id)
+
         if user_obj.is_verified:
-            return Response({"details": "your account has been already been verified"})
+            return Response(
+                {"details": "your account has already been verified"}
+            )
         user_obj.is_verified = True
         user_obj.save()
         return Response(
-            {"details": "your account have been verified and activated successfuly"}
+            {
+                "details": "your account have been verified and activated successfully"
+            }
         )
 
 
@@ -178,7 +189,7 @@ class ActivationResendApiView(generics.GenericAPIView):
         )
         EmailThread(email_obj).start()
         return Response(
-            {"details": "user activation resend successfuly"},
+            {"details": "user activation resend successfully"},
             status=status.HTTP_200_OK,
         )
 
