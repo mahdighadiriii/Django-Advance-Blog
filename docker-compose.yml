@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
 
+<<<<<<< Updated upstream
   db:
     container_name: postgres_container
     image: postgres
@@ -21,6 +22,18 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
+=======
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+
+>>>>>>> Stashed changes
 
   backend:
     build: .
@@ -49,3 +62,4 @@ services:
 
 volumes:
   smtp4dev-data:
+
