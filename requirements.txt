@@ -5,10 +5,13 @@ pillow
 djangorestframework
 
 
+
 # third party modules
 markdown
 django-filter
 drf-yasg[validation]
+djoser
+djangorestframework-simplejwt
 
 
 # deployment modules
